@@ -1,0 +1,19 @@
+---
+export interface Props {
+    /**
+     * We make the "content" prop optional,
+     * because we also allow using a slot
+     */
+    content?: string;
+}
+// Get the content prop
+// We rename it for clarity, to "contentFromProps"
+// If the props is not defined, this will be empty
+const { content: contentFromProps } = Astro.props;
+---
+
+<div>
+    <div>
+        <slot name="content" set:html={contentFromProps} />
+    </div>
+</div>

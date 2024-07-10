@@ -1,0 +1,17 @@
+---
+// Get the content prop
+// We rename it for clarity, to "contentFromProps"
+const { content: contentFromProps } = Astro.props;
+---
+
+<div>
+    <p set:html={contentFromProps} />
+    <p>
+        Rendering content directly with <code>&#123;contentFromProps&#125;</code
+        >
+        doesn't work, we would see the HTML !
+    </p>
+    <p>
+        {contentFromProps}
+    </p>
+</div>

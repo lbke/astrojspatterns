@@ -1,0 +1,30 @@
+---
+export interface Props {
+    /**
+     * We make the "content" prop optional,
+     * because we also allow using a slot
+     */
+    content?: string;
+}
+
+// Get the content prop
+// We rename it for clarity, to "contentFromProps"
+// If the props is not defined, this will be empty
+const { content: contentFromProps } = Astro.props;
+// Render the content of the "content" slot
+// (if the slot is not defined this will be empty)
+const contentFromSlot = await Astro.slots.render("content");
+
+// We use the "content" value from the prop if it exists
+// Otherwise, we use the "content" value from the slot
+let finalContent;
+if (!!contentFromProps) {
+    finalContent = contentFromProps;
+} else {
+    finalContent = contentFromSlot;
+}
+---
+
+<div>
+    <p>{finalContent}</p>
+</div>

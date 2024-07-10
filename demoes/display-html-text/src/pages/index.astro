@@ -1,0 +1,53 @@
+---
+import DisplayElement from "../components/DisplayElement.astro";
+import DisplayHtmlString from "../components/DisplayHtmlString.astro";
+import DisplayString from "../components/DisplayString.astro";
+import DisplaySlotDirectly from "../doesntwork/DisplaySlotDirectly.astro";
+import DisplayHtmlStringOrSlot from "../components/DisplayHtmlStringOrSlot.astro";
+import DisplaySlotOrHtmlString from "../components/DisplaySlotOrHtmlString.astro";
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+		<style is:global>
+			html {
+				font-family: sans-serif;
+			}
+			body > div {
+				padding: 16px;
+				border-radius: 16px;
+				border: 1px solid rgb(120, 91, 233);
+				margin: 8px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Basic patterns</h1>
+		<DisplayString content="A basic string props" />
+		<DisplayHtmlString content="A prop with <strong>HTML</strong>" />
+		<DisplayElement>
+			<p slot="content">A slot using <strong>HTML</strong></p>
+		</DisplayElement>
+		<h2>Allowing HTML string in props, or slots</h2>
+		<h2>Implementation with "Astro.render"</h2>
+		<DisplayHtmlStringOrSlot content="A prop with <strong>HTML</strong>" />
+		<DisplayHtmlStringOrSlot>
+			<p slot="content">A slot using <strong>HTML</strong></p>
+		</DisplayHtmlStringOrSlot>
+		<h2>Alternative implementation with slot fallback</h2>
+		<DisplaySlotOrHtmlString content="A prop with <strong>HTML</strong>" />
+		<DisplaySlotOrHtmlString>
+			<p slot="content">A slot using <strong>HTML</strong></p>
+		</DisplaySlotOrHtmlString>
+		<h1>Patterns that do not work</h1>
+		<h2>Displaying a rendered slot directly: we see the slot HTML!</h2>
+		<DisplaySlotDirectly>
+			<p slot="content">A slot using <strong>HTML</strong></p>
+		</DisplaySlotDirectly>
+	</body>
+</html>

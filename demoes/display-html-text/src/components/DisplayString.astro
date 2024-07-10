@@ -1,0 +1,10 @@
+---
+// Get the content prop
+// We rename it for clarity,
+// to "contentFromProps"
+const { content: contentFromProps } = Astro.props;
+---
+
+<div>
+    <p>{contentFromProps}</p>
+</div>
