@@ -15,13 +15,21 @@ Our translations are stored in a database. They are not always plain text, they 
 
 We want to be able to render these strings containing HTML, for example:
 
-```jsx
+```astro
 <TranslatedText 
 content="<strong>Bonjour les amis !</strong>"
 />
 ```
 
 In Astro, we use the [`set:html` directive](https://docs.astro.build/en/reference/directives-reference/#sethtml) to achieve that.
+
+```astro
+---
+// TranslatedText.astro
+const { content } = Astro.props
+---
+<div set:html={content} />
+```
 
 ## 2) You want to render either a prop or an element
 
@@ -30,14 +38,26 @@ passing rendered elements to another component.
 
 This is particularly useful for creating reusable UI (user interface) components, for instance a "BigText" component that display an text with a very big font size.
 
+```astro
+---
+// BigText.astro
+---
+<slot name="content"></slot>
+```
+
+```astro
+<BigText>
+  <p slot="content">Make me <strong>BIG!</strong></p>
+</BigText>
+```
+
 If you don't know slots yet,
 I invite you to read [the official documentation](https://docs.astro.build/en/basics/astro-components/#slots).
 
 The tricky part is that you may also want to allow simpler strings. 
 So you'd want to make your reusable component work in two different scenarios, as shown below.
 
-
-```jsx
+```astro
 {/** Basic scenario : just passing a string */}
 <BigText content="Hello Big world!" />
 {/** Mild scenario : the string has some HTML */}
@@ -48,6 +68,24 @@ So you'd want to make your reusable component work in two different scenarios, a
     <strong>big world</strong></p>
 </BigText>
 ```
+
+To achieve that, you can use [`Astro.slots.render`](https://docs.astro.build/en/reference/api-reference/#astroslots).
+
+This function let's you generate the HTML for a given slot, without using the `<slot>` tag. 
+This way you can control the slot more precisely using JavaScript.
+
+```astro
+---
+// BigText.astro
+let { content } = Astro.props
+if (!content) {
+  content =  await Astro.slots.render("content")
+}
+---
+<p set:html={content}></p>
+```
+
+
 ## ⚠️ Be careful with `set:html`
 
 Use `set:html` with care: you should never pass untrusted user content there! 
