@@ -6,7 +6,7 @@ We want to create a component that is able to display HTML content.
 
 HTML text can appear in two different situations: rendering strings, or rendering elements.
 
-## 1) You want to render a string 
+## 1) You want to render a string that can contain HTML
 
 In the State of JavaScript survey,
 we have a complex translation management system. We call that "internationalization" or "i18n". 
@@ -28,15 +28,43 @@ In Astro, we use the [`set:html` directive](https://docs.astro.build/en/referenc
 // TranslatedText.astro
 const { content } = Astro.props
 ---
-<div set:html={content} />
+<span set:html={content} />
 ```
 
-## 2) You want to render either a prop or an element
+> We often apply `set:html` to a [Fragment](https://docs.astro.build/en/basics/astro-syntax/#fragments),
+> so that the parent component keeps full control on the rendered HTML.
 
-Astro has a "slot" mechanism that allows
+## 2) You want to render a string that can contain HTML, or an "element"
+
+When you write Astro code, you are defining elements:
+
+```jsx
+{/** This is a string that contains HTML */}
+"<p>Some content</p>"
+{/** This is a element */}
+<p>Some content</p>
+```
+
+Sometimes you want to pass elements to other components. 
+This is particularly useful for creating reusable UI (user interface) components, 
+for instance a "BigText" component that display an text with a very big font size.
+
+```jsx
+/** 
+ * This is React code, 
+ * but it doesn't work in .astro files :(
+ * We need to use "slots" instead 
+ */
+<ReactBigText content={<p>Some content</p>} />
+```
+
+### Slots to pass elements to components
+
+You can't pass elements as props in Astro,
+like you would do in React.
+
+Instead, Astro has a "slot" mechanism that allows
 passing rendered elements to another component.
-
-This is particularly useful for creating reusable UI (user interface) components, for instance a "BigText" component that display an text with a very big font size.
 
 ```astro
 ---
@@ -54,7 +82,12 @@ This is particularly useful for creating reusable UI (user interface) components
 If you don't know slots yet,
 I invite you to read [the official documentation](https://docs.astro.build/en/basics/astro-components/#slots).
 
-The tricky part is that you may also want to allow simpler strings. 
+### Strings or elements?
+
+The tricky part is that you may also want to allow simpler strings.
+
+Strings can be used for simple text, and slots for more complicated content.
+
 So you'd want to make your reusable component work in two different scenarios, as shown below.
 
 ```astro
@@ -62,7 +95,7 @@ So you'd want to make your reusable component work in two different scenarios, a
 <BigText content="Hello Big world!" />
 {/** Mild scenario : the string has some HTML */}
 <BigText content="Hello <strong>Big</string> world!" />
-{/** Or using a complex slot*/}
+{/** Complex scenario : passing elements via a slot */}
 <BigText>
     <p slot="content">A more complicated
     <strong>big world</strong></p>
@@ -85,8 +118,10 @@ if (!content) {
 <p set:html={content}></p>
 ```
 
-
 ## ⚠️ Be careful with `set:html`
+
+We've seen that `set:html` is very useful to allow passing complex content
+that can contain HTML to another component.
 
 Use `set:html` with care: you should never pass untrusted user content there! 
 You could allow a script injection attack, also known as [XSS](https://owasp.org/www-community/attacks/xss/) or more precisely [DOM based XSS](https://owasp.org/www-community/attacks/DOM_Based_XSS)).
@@ -106,6 +141,9 @@ or inputs obtained from a database here.
 
 If you really need too, 
 [sanitize](https://en.wikipedia.org/wiki/HTML_sanitization) the input so that valid HTML code is escaped.
+
+> In React, the equivalent to `set:html` is [dangerouslySetInnerHTML](https://legacy.reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml). 
+> The name is more frightening, but we use this pattern less often.
 
 ## Exercise
 
