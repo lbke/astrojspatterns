@@ -47,7 +47,7 @@ When you write Astro code, you are defining elements:
 
 Sometimes you want to pass elements to other components. 
 This is particularly useful for creating reusable UI (user interface) components, 
-for instance a "BigText" component that display an text with a very big font size.
+for instance a "BigText" component that display a text with a very big font size.
 
 ```jsx
 /** 
@@ -139,7 +139,7 @@ you could create a severe security breach!
 You should try avoiding sending user inputs,
 or inputs obtained from a database here.
 
-If you really need too, 
+If you really need to, 
 [sanitize](https://en.wikipedia.org/wiki/HTML_sanitization) the input so that valid HTML code is escaped.
 
 > In React, the equivalent to `set:html` is [dangerouslySetInnerHTML](https://legacy.reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml). 
