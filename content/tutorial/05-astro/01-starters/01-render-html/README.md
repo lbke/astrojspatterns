@@ -7,13 +7,15 @@ We want to craft Astro components that can render text content in mutliple scena
 Let's start with a basic example, a `WelcomeSection` that accepts a string `content` props and renders it.
 
 ```astro
+/// file: WelcomeSection.astro
 ---
-// WelcomeSection.astro
 const { content } = Astro.props
 ---
 <p className="welcome-section">{content}</p>
 ```
+
 ```astro
+/// file: Homepage.astro
 ---
 import WelcomeSection from "./WelcomeSection.astro"
 const welcomeText = "Hello friends!"
@@ -36,6 +38,7 @@ Our translations are stored in a database and can be written in plain text or in
 We want to be able to render these strings containing HTML, for example:
 
 ```astro
+/// file: TranslatedSection.astro
 ---
 //  "Bonjour <strong>les meilleurs amis !</strong>"
 const welcomeText = await getTextFromDb()
@@ -57,8 +60,8 @@ So we want to create a component that is able to display strings containing some
 In Astro, we use the [`set:html` directive](https://docs.astro.build/en/reference/directives-reference/#sethtml) to achieve that.
 
 ```astro
+/// file: TranslatedText.astro
 ---
-// TranslatedText.astro
 // Hello "<strong>best friends!</strong>"
 const { content } = Astro.props
 ---
@@ -75,8 +78,11 @@ const { content } = Astro.props
 
 You could allow a script injection attack, also known as [XSS](https://owasp.org/www-community/attacks/xss/) or more precisely [DOM based XSS](https://owasp.org/www-community/attacks/DOM_Based_XSS)).
 
-```jsx
-cont userContent = await getUserContentFromDb()
+```astro
+/// file: XssInjection.astro
+---
+const userContent = await getUserContentFromDb()
+---
 {/** 
 BAD!
 if "userContent" is "<script src="./hack-your-website.js">",
@@ -106,6 +112,7 @@ You can think of a string as a variable with quotes, like `"Hello <strong>best f
 When you write some Astro code, you are creating elements.
 
 ```astro
+/// file: WelcomeSection.astro
 ---
 // This is a string
 const welcomeText = "Hello <strong>best friends!</strong>"
@@ -125,6 +132,7 @@ In React, you can pass elements as props like shown below:
 
 
 ```jsx
+/// file: ReactSection.jsx
 /** 
  * This is React code, 
  * but it doesn't work in .astro files :(
@@ -141,13 +149,12 @@ Astro has a "slot" mechanism that allows
 passing rendered elements to another component.
 
 ```astro
----
-// BigText.astro
----
-<slot name="content"></slot>
+/// file: BigText.astro
+<slot class="big" name="content"></slot>
 ```
 
 ```astro
+/// file: Jumbotron.astro
 <BigText>
   <p slot="content">Make me <strong>BIG!</strong></p>
 </BigText>
@@ -171,6 +178,7 @@ These UI components need to be very flexible, because they can be used in differ
 For text content, we may want to allow developer to pass either strings, or elements, depending on their needs. For instance a `BigText` component could be used in different manners as show below:
 
 ```astro
+/// file: BigTextDemo.astro
 {/** Basic scenario : just passing a string */}
 <BigText content="Hello Big world!" />
 {/** Mild scenario : the string has some HTML */}
@@ -193,8 +201,8 @@ The point is to remove the need to use a `<slot>` element and manipulate the slo
 It definitely sounds complicated, but let's see an exemple: 
 
 ```astro
+/// file: BigText.astro
 ---
-// BigText.astro
 let { content } = Astro.props
 if (!content) {
   content =  await Astro.slots.render("content")
@@ -206,6 +214,7 @@ if (!content) {
 THe `BigText` component can now work with either a content prop, or a content slot!
 
 ```astro
+/// file: BigTextDemo.astro
 {/* Will work! */}
 <BigText content="hello friends!"/>
 {/* Will work! */}

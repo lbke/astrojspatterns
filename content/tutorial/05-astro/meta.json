@@ -1,0 +1,8 @@
+{
+	"title": "Astro basics",
+	"scope": {
+		"prefix": "/",
+		"name": "project"
+	},
+	"focus": "/src/routes/+page.svelte"
+}
